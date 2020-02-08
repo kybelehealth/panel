@@ -1,0 +1,53 @@
+.ant-menu-item-group {
+  margin-top: 2em;
+}
+
+.ant-menu-item-group-title {
+  opacity: 0.5;
+  letter-spacing: 1px;
+  font-size: 0.8em;
+  text-transform: uppercase;
+}
+
+.ant-menu-dark .ant-menu-item,
+.ant-menu-dark .ant-menu-item-group-title,
+.ant-menu-dark .ant-menu-item > a {
+  color: hsla(0, 0%, 100%, 0.5);
+}
+
+.ant-menu-item.ant-menu-item-selected {
+  background-color: transparent !important;
+}
+
+/* page-header */
+
+.ant-page-header-heading {
+  display: flex;
+  align-items: baseline;
+}
+
+.ant-page-header-heading-title {
+  font-size: 26px;
+}
+.ant-page-header-heading-sub-title {
+  margin: 0;
+}
+
+.ant-page-header-heading-extra {
+  margin-left: auto;
+}
+
+/* table */
+
+.ant-table-thead > tr > th {
+  background-color: transparent;
+}
+
+.ant-table-tbody > tr > td.ant-table-column-sort {
+  background-color: rgba(0, 0, 0, 0.02);
+}
+
+.ant-table-middle table tr th,
+.ant-table-middle table tr td {
+  padding: 12px 20px !important;
+}

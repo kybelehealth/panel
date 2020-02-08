@@ -1,0 +1,13 @@
+.login-layout {
+  padding: 30px;
+  height: 100vh;
+  display: flex;
+  align-items: center;
+}
+
+.login-form {
+  width: 100%;
+  max-width: 340px;
+  margin-left: auto;
+  margin-right: auto;
+}
