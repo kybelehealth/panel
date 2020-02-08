@@ -1,3 +1,5 @@
+import Layout from 'antd/es/layout'
+import Menu from 'antd/es/menu'
 import Row from 'antd/es/row'
 import Col from 'antd/es/col'
 import Form from 'antd/es/form'
@@ -9,4 +11,16 @@ import Popconfirm from 'antd/es/popconfirm'
 
 import message from 'antd/es/message'
 
-export { Row, Col, Form, Icon, Input, Button, Steps, Popconfirm, message }
+export {
+  Layout,
+  Menu,
+  Row,
+  Col,
+  Form,
+  Icon,
+  Input,
+  Button,
+  Steps,
+  Popconfirm,
+  message
+}

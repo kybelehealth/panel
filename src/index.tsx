@@ -9,6 +9,7 @@ import * as serviceWorker from './serviceWorker'
 import 'antd/dist/antd.css'
 import './index.css'
 
+import Layout from './components/layout'
 import LoginView from './views/authentication/login'
 import VerifyView from './views/authentication/verify'
 
@@ -20,6 +21,10 @@ const routes = [
   {
     path: '/verify',
     component: VerifyView
+  },
+  {
+    path: '/',
+    component: Layout
   }
 ]
 
@@ -36,11 +41,9 @@ ReactDOM.render(
   <Provider store={store}>
     <Router>
       <Switch>
-        <Switch>
-          {routes.map((route, i) => (
-            <RouteWithSubRoutes key={i} {...route} />
-          ))}
-        </Switch>
+        {routes.map((route, i) => (
+          <RouteWithSubRoutes key={i} {...route} />
+        ))}
       </Switch>
     </Router>
   </Provider>,
