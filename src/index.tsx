@@ -10,11 +10,16 @@ import 'antd/dist/antd.css'
 import './index.css'
 
 import LoginView from './views/authentication/login'
+import VerifyView from './views/authentication/verify'
 
 const routes = [
   {
     path: '/login',
     component: LoginView
+  },
+  {
+    path: '/verify',
+    component: VerifyView
   }
 ]
 

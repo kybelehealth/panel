@@ -6,11 +6,12 @@ import { Formik } from 'formik'
 import { FormikResponse } from '../../types/formik'
 import { inject, observer } from 'mobx-react'
 
-import { RouteComponentProps } from 'react-router-dom'
+import { ComponentProps } from '../../types/routing'
+import qs from 'query-string'
 
 import './style.css'
 
-function LoginView({ history }: RouteComponentProps) {
+function LoginView({ history }: ComponentProps) {
   const onSubmit = async (
     values: LoginFields,
     { setSubmitting }: FormikResponse
@@ -20,13 +21,15 @@ function LoginView({ history }: RouteComponentProps) {
         ...values,
         LanguageId: 1
       })
-      history.push('/verify', {
-        query: {
+
+      history.push({
+        pathname: '/verify',
+        search: qs.stringify({
           ...values,
           authyId: data.authyId
-        }
+        })
       })
-    } finally {
+    } catch (e) {
       setSubmitting(false)
     }
   }
@@ -108,7 +111,7 @@ function LoginView({ history }: RouteComponentProps) {
                         type="primary"
                         htmlType="submit"
                         disabled={isSubmitting}
-                        style={{ width: '100%' }}
+                        block
                         loading={isSubmitting}
                       >
                         Next

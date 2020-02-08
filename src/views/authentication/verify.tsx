@@ -1,101 +1,78 @@
-import React, { useEffect, useState } from 'react'
-import { useRouter } from 'next/router'
-import fetch from '../libs/fetch'
-import useInterval from '../hooks/interval'
-import { hasErrors } from '../libs/helper'
-import { inject, observer } from 'mobx-react'
+import React, { useState } from 'react'
+import request from '../../library/request'
 import {
-  Popconfirm,
-  message,
   Row,
   Col,
-  Form,
   Icon,
   Input,
   Button,
-  Steps
-} from 'antd'
+  Steps,
+  Popconfirm,
+  message
+} from '../../library/ui'
+import { LoginVerifyFields, LoginVerifyInputFields } from '../../types/fields'
+import { Formik } from 'formik'
+import { FormikResponse } from '../../types/formik'
+import { inject, observer } from 'mobx-react'
+
+import { useInterval } from '../../helpers/hooks'
+import { useLocation } from 'react-router-dom'
+import { ComponentProps } from '../../types/routing'
+
+import qs from 'query-string'
 
 const TIMER = 20
 
-function VerifyView({ form, store }) {
-  const router = useRouter()
+function VerifyView({ history, store }: ComponentProps) {
   const [timer, setTimer] = useState(0)
-  const [waitReSend, setWaitReSend] = useState(false)
-  const [waitSubmit, setWaitSubmit] = useState(false)
+  const [waitResend, setwaitResend] = useState(false)
 
-  const { phoneNumber, email, authyId } = router.query || {
+  const query: any = qs.parse(useLocation().search)
+
+  const { phoneNumber, email, authyId, LanguageId }: LoginVerifyFields = {
     phoneNumber: '',
     email: '',
-    authyId: ''
+    authyId: '',
+    LanguageId: 1,
+    ...query
   }
-
-  const {
-    getFieldDecorator,
-    getFieldsError,
-    getFieldError,
-    isFieldTouched
-  } = form
-
-  const codeError = isFieldTouched('code') && getFieldError('code')
-
-  useEffect(() => {
-    if (!authyId || authyId === '') {
-      router.push('/login')
-    }
-    form.validateFields()
-  }, [])
 
   useInterval(
     () => {
       setTimer(timer - 1)
     },
-    timer === 0 ? null : 1000
+    timer === 0 ? undefined : 1000
   )
 
   const sendCode = async () => {
     try {
-      setWaitReSend(true)
-      const { data } = await fetch.post('users/login/', {
+      setwaitResend(true)
+      const { data } = await request.shared.post('users/login/', {
         phoneNumber,
-        email
+        email,
+        LanguageId
       })
       setTimer(TIMER)
       message.success(data.message)
-    } catch (error) {
-      if (error.response) {
-        message.error(error.response.data.message)
-      } else {
-        message.error(error.message)
-      }
     } finally {
-      setWaitReSend(false)
+      setwaitResend(false)
     }
   }
 
-  const submit = e => {
-    e.preventDefault()
-    form.validateFields(async (err, values) => {
-      if (err) return
-
-      try {
-        setWaitSubmit(true)
-        const { data } = await fetch.post('users/login/two-factor/', {
-          authyId,
-          token: values.code
-        })
-        store.onLogin(data.token)
-        await router.push('/')
-      } catch (error) {
-        if (error.response) {
-          message.error(error.response.data.message)
-        } else {
-          message.error(error.message)
-        }
-      } finally {
-        setWaitSubmit(false)
-      }
-    })
+  const onSubmit = async (
+    values: LoginVerifyInputFields,
+    { setSubmitting }: FormikResponse
+  ) => {
+    try {
+      const { data } = await request.shared.post('users/login/two-factor/', {
+        authyId,
+        token: values.code
+      })
+      store.onLogin(data.token)
+      history.replace('/')
+    } catch (e) {
+      setSubmitting(false)
+    }
   }
 
   return (
@@ -114,72 +91,76 @@ function VerifyView({ form, store }) {
         {/* form */}
         <Row>
           <Col span={24}>
-            <Form onSubmit={submit}>
-              <Form.Item
-                validateStatus={codeError ? 'error' : ''}
-                help={codeError || ''}
-              >
-                {getFieldDecorator('code', {
-                  rules: [
-                    {
-                      required: true,
-                      message: 'Please input your sms code!'
-                    },
-                    {
-                      len: 6,
-                      message: 'SMS Code 6 karakterli olmalıdır!'
-                    }
-                  ]
-                })(
-                  <Input
-                    autoComplete="off"
-                    allowClear
-                    maxLength={6}
-                    prefix={
-                      <Icon
-                        type="number"
-                        style={{ color: 'rgba(0,0,0,.25)' }}
+            <Formik initialValues={{ code: '' }} onSubmit={onSubmit}>
+              {({
+                values,
+                errors,
+                touched,
+                handleChange,
+                handleBlur,
+                handleSubmit,
+                isSubmitting
+                /* and other goodies */
+              }) => (
+                <form onSubmit={handleSubmit}>
+                  <Row>
+                    <Col>
+                      <Input
+                        type="text"
+                        name="code"
+                        autoComplete="off"
+                        allowClear
+                        maxLength={6}
+                        prefix={
+                          <Icon
+                            type="number"
+                            style={{ color: 'rgba(0,0,0,.25)' }}
+                          />
+                        }
+                        onChange={handleChange}
+                        onBlur={handleBlur}
+                        value={values.code}
                       />
-                    }
-                  />
-                )}
-              </Form.Item>
+                    </Col>
+                  </Row>
 
-              <Form.Item>
-                <Button
-                  type="primary"
-                  htmlType="submit"
-                  disabled={hasErrors(getFieldsError())}
-                  loading={waitSubmit}
-                  block
-                >
-                  Verify
-                </Button>
-              </Form.Item>
+                  <Row style={{ marginBottom: 0 }}>
+                    <Col>
+                      <Button
+                        type="primary"
+                        htmlType="submit"
+                        disabled={isSubmitting}
+                        loading={isSubmitting}
+                        block
+                      >
+                        Next
+                      </Button>
+                    </Col>
+                  </Row>
 
-              <Form.Item
-                type="flex"
-                justify="center"
-                style={{ marginBottom: 0 }}
-              >
-                <Popconfirm
-                  title={`${phoneNumber} numaraya gönderilecek.`}
-                  onConfirm={sendCode}
-                  okText="Yes"
-                  cancelText="No"
-                  disabled={timer > 0}
-                >
-                  <Button
-                    type="link"
-                    icon="sync"
-                    loading={waitReSend}
-                    disabled={timer > 0}
-                  >
-                    Kodu tekrar gönder {timer > 0 && `(${timer})`}
-                  </Button>
-                </Popconfirm>
-              </Form.Item>
-            </Form>
+                  <Row type="flex" justify="center" style={{ marginBottom: 0 }}>
+                    <Col>
+                      <Popconfirm
+                        title={`Sending code to ${phoneNumber}`}
+                        onConfirm={sendCode}
+                        okText="Yes"
+                        cancelText="No"
+                        disabled={timer > 0}
+                      >
+                        <Button
+                          type="link"
+                          icon="sync"
+                          loading={waitResend}
+                          disabled={timer > 0}
+                        >
+                          Resend code {timer > 0 && `in ${timer} seconds`}
+                        </Button>
+                      </Popconfirm>
+                    </Col>
+                  </Row>
+                </form>
+              )}
+            </Formik>
           </Col>
         </Row>
       </div>
@@ -187,4 +168,4 @@ function VerifyView({ form, store }) {
   )
 }
 
-export default inject('store')(observer(VerifyView)
+export default inject('store')(observer(VerifyView))

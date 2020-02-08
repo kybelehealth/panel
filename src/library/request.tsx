@@ -6,7 +6,7 @@ class Request {
 
   constructor() {
     this.axios = axios.create({
-      baseURL: 'http://192.168.86.248:3000/v1'
+      baseURL: 'https://api.kybelehealth.org/v1'
     })
 
     /**
@@ -37,9 +37,8 @@ class Request {
   }
 
   set token(value: String) {
-    this.token = value
     this.axios.interceptors.request.use(config => {
-      config.headers.authorization = this.token
+      config.headers.authorization = value
       return config
     }, Promise.reject)
   }
