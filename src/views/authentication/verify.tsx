@@ -23,7 +23,7 @@ import qs from 'query-string'
 
 const TIMER = 20
 
-function VerifyView({ history, authentication }: ComponentProps) {
+function VerifyView({ routing, authentication }: ComponentProps) {
   const [timer, setTimer] = useState(0)
   const [waitResend, setwaitResend] = useState(false)
 
@@ -69,7 +69,7 @@ function VerifyView({ history, authentication }: ComponentProps) {
         token: values.code
       })
       authentication.onLogin(data.token)
-      history.replace('/')
+      routing.replace('/')
     } catch (e) {
       setSubmitting(false)
     }
@@ -168,4 +168,4 @@ function VerifyView({ history, authentication }: ComponentProps) {
   )
 }
 
-export default inject('authentication')(observer(VerifyView))
+export default inject('routing')(inject('authentication')(observer(VerifyView)))

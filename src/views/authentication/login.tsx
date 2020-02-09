@@ -11,7 +11,7 @@ import qs from 'query-string'
 
 import './style.css'
 
-function LoginView({ history }: ComponentProps) {
+function LoginView({ routing }: ComponentProps) {
   const onSubmit = async (
     values: LoginFields,
     { setSubmitting }: FormikResponse
@@ -22,7 +22,7 @@ function LoginView({ history }: ComponentProps) {
         LanguageId: 1
       })
 
-      history.push({
+      routing.push({
         pathname: '/verify',
         search: qs.stringify({
           ...values,
@@ -128,4 +128,4 @@ function LoginView({ history }: ComponentProps) {
   )
 }
 
-export default inject('store')(observer(LoginView))
+export default inject('routing')(observer(LoginView))

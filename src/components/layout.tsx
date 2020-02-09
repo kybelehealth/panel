@@ -1,6 +1,6 @@
 import React from 'react'
 import { Route, Switch } from 'react-router-dom'
-
+import { Redirect } from 'react-router'
 import { ComponentProps } from '../types/routing'
 import { Layout, Menu, Icon } from '../library/ui'
 import HomeView from '../views/home'
@@ -63,9 +63,13 @@ function RouteWithSubRoutes(route: any) {
   )
 }
 
-const LayoutMaster = ({ history }: ComponentProps) => {
+const LayoutMaster = ({ history, authentication }: ComponentProps) => {
   const onChangePage = (item: any) => {
     history.push(item.key)
+  }
+
+  if (!authentication.token) {
+    return <Redirect to="/login" />
   }
 
   return (
@@ -112,4 +116,6 @@ const LayoutMaster = ({ history }: ComponentProps) => {
   )
 }
 
-export default inject('routing')(observer(LayoutMaster))
+export default inject('routing')(
+  inject('authentication')(observer(LayoutMaster))
+)
