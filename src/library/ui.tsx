@@ -1,4 +1,6 @@
 import Layout from 'antd/es/layout'
+import Table from 'antd/es/table'
+import PageHeader from 'antd/es/page-header'
 import Menu from 'antd/es/menu'
 import Row from 'antd/es/row'
 import Col from 'antd/es/col'
@@ -13,6 +15,8 @@ import message from 'antd/es/message'
 
 export {
   Layout,
+  Table,
+  PageHeader,
   Menu,
   Row,
   Col,

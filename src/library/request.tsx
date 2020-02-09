@@ -26,7 +26,7 @@ class Request {
         }
 
         if (error.response) {
-          message.error(error.response.data)
+          message.error(error.response.data.message)
           return Promise.reject(error.response.data)
         } else {
           message.error(error.message)

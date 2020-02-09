@@ -3,6 +3,7 @@ import { BrowserRouter as Router, Route, Switch } from 'react-router-dom'
 
 import { Layout, Menu, Icon } from '../library/ui'
 import HomeView from '../views/home'
+import MembersView from '../views/members'
 import { ComponentProps } from '../types/routing'
 
 const { Sider, Content } = Layout
@@ -12,13 +13,14 @@ const routes = [
     path: '/',
     title: 'Dashboard',
     icon: 'pie-chart',
-    component: HomeView
+    component: HomeView,
+    exact: true
   },
   {
     path: '/members',
     title: 'Members',
     icon: 'member',
-    component: HomeView
+    component: MembersView
   },
   {
     path: '/vaccines',
