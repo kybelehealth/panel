@@ -1,9 +1,9 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
 import { Provider } from 'mobx-react'
-import { BrowserRouter as Router, Route, Switch } from 'react-router-dom'
+import { Route, Switch } from 'react-router-dom'
+import { Router } from 'react-router'
 
-import store from './store'
 import * as serviceWorker from './serviceWorker'
 
 import 'antd/dist/antd.css'
@@ -13,14 +13,24 @@ import Layout from './components/layout'
 import LoginView from './views/authentication/login'
 import VerifyView from './views/authentication/verify'
 
+import { syncHistoryWithStore } from 'mobx-react-router'
+
+import stores from './store'
+import History from './store/history'
+import routingStore from './store/routing'
+
+const history = syncHistoryWithStore(History, routingStore)
+
 const routes = [
   {
     path: '/login',
-    component: LoginView
+    component: LoginView,
+    exact: true
   },
   {
     path: '/verify',
-    component: VerifyView
+    component: VerifyView,
+    exact: true
   },
   {
     path: '/',
@@ -32,14 +42,15 @@ function RouteWithSubRoutes(route: any) {
   return (
     <Route
       path={route.path}
+      exact={route.exact}
       render={props => <route.component {...props} routes={route.routes} />}
     />
   )
 }
 
 ReactDOM.render(
-  <Provider store={store}>
-    <Router>
+  <Provider {...stores}>
+    <Router history={history}>
       <Switch>
         {routes.map((route, i) => (
           <RouteWithSubRoutes key={i} {...route} />

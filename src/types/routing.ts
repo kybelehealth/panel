@@ -1,6 +1,8 @@
 import { RouteComponentProps } from 'react-router-dom'
-import Store from '../store'
+import authentication from '../store/authentication'
+import routing from '../store/routing'
 
 export interface ComponentProps extends RouteComponentProps {
-  store: typeof Store
+  authentication: typeof authentication
+  routing: typeof routing
 }

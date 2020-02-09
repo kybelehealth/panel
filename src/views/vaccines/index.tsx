@@ -1,6 +1,6 @@
 import React from 'react'
 import { Layout, Button } from 'antd'
-import MemberColumn from './column'
+import VaccineColumn from './column'
 import PageHeader from '../../components/page-header'
 
 import { inject, observer } from 'mobx-react'
@@ -8,13 +8,13 @@ import DatasourceTable from '../../components/table'
 
 const { Content } = Layout
 
-function MembersView() {
+function VaccinesView() {
   const functions = new Map()
 
   return (
     <>
       <PageHeader
-        title="Members"
+        title="Vaccines"
         totalData={0}
         extra={[
           <Button
@@ -44,12 +44,12 @@ function MembersView() {
       <Content style={{ padding: 8, backgroundColor: '#fff' }}>
         <DatasourceTable
           functions={functions}
-          path="users"
-          columns={MemberColumn}
+          path="vaccines"
+          columns={VaccineColumn}
         />
       </Content>
     </>
   )
 }
 
-export default inject('routing')(observer(MembersView))
+export default inject('routing')(observer(VaccinesView))
