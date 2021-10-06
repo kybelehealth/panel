@@ -5,7 +5,7 @@
   "dependencies": {
     "@abhisekp/yup-phone": "git+https://github.com/abhisekp/yup-phone.git",
     "antd": "^3.26.8",
-    "axios": "^0.19.2",
+    "axios": "^0.21.2",
     "date-fns": "^2.9.0",
     "formik": "^2.1.4",
     "history": "^4.10.1",
